@@ -1,0 +1,15 @@
+# Java / Spring
+target/
+*.class
+.mvn/
+mvnw
+mvnw.cmd
+.idea/
+*.iml
+*.log
+
+# Frontend
+node_modules/
+dist/
+.env.local
+.DS_Store
