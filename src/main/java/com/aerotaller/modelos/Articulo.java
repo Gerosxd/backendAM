@@ -1,132 +1,169 @@
 package com.aerotaller.modelos;
 
-public class Articulo {
+import jakarta.persistence.*;
 
-    private int idArticulo;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "Articulo")
+public class Articulo
+{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idArticulo")
+    private Integer idArticulo;
+
+    @Column(name = "Codigo", nullable = false, unique = true, length = 50)
     private String codigo;
+
+    @Column(name = "NoSerie", nullable = false, length = 50)
     private String noSerie;
+
+    @Column(name = "Descripcion", nullable = false, length = 255)
     private String descripcion;
-    private int categoria;
-    private int unidadMedida;
-    private int almacen;
+
+    @Column(name = "Categoria", nullable = false)
+    private Integer categoria;
+
+    @Column(name = "UnidadMedida", nullable = false)
+    private Integer unidadMedida;
+
+    @Column(name = "Almacen", nullable = false)
+    private Integer almacen;
+
+    @Column(name = "Ubicacion", nullable = false, length = 255)
     private String ubicacion;
-    private int proveedor;
-    private double precioCompra;
-    private int stock;
-    private int condicion;
 
-    public Articulo() {
-    }
+    @Column(name = "Proveedor", nullable = false)
+    private Integer proveedor;
 
-    public Articulo(int idArticulo, String codigo, String noSerie, String descripcion, int categoria, int unidadMedida, int almacen, String ubicacion, int proveedor, double precioCompra, int stock, int condicion) {
-        this.setIdArticulo(idArticulo);
-        this.setCodigo(codigo);
-        this.setNoSerie(noSerie);
-        this.setDescripcion(descripcion);
-        this.setCategoria(categoria);
-        this.setUnidadMedida(unidadMedida);
-        this.setAlmacen(almacen);
-        this.setUbicacion(ubicacion);
-        this.setProveedor(proveedor);
-        this.setPrecioCompra(precioCompra);
-        this.setStock(stock);
-        this.setCondicion(condicion);
-    }
+    @Column(name = "PrecioCompra", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioCompra;
 
+    @Column(name = "Stock", nullable = false)
+    private Integer stock;
 
-    public int getIdArticulo() {
+    @Column(name = "Condicion", nullable = false)
+    private Integer condicion;
+
+    public Integer getIdArticulo()
+    {
         return idArticulo;
     }
 
-    public void setIdArticulo(int idArticulo) {
+    public void setIdArticulo(Integer idArticulo)
+    {
         this.idArticulo = idArticulo;
     }
 
-    public String getCodigo() {
+    public String getCodigo()
+    {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(String codigo)
+    {
         this.codigo = codigo;
     }
 
-    public String getNoSerie() {
+    public String getNoSerie()
+    {
         return noSerie;
     }
 
-    public void setNoSerie(String noSerie) {
+    public void setNoSerie(String noSerie)
+    {
         this.noSerie = noSerie;
     }
 
-    public String getDescripcion() {
+    public String getDescripcion()
+    {
         return descripcion;
     }
 
-    public void setDescripcion(String descripcion) {
+    public void setDescripcion(String descripcion)
+    {
         this.descripcion = descripcion;
     }
 
-    public int getCategoria() {
+    public Integer getCategoria()
+    {
         return categoria;
     }
 
-    public void setCategoria(int categoria) {
+    public void setCategoria(Integer categoria)
+    {
         this.categoria = categoria;
     }
 
-    public int getUnidadMedida() {
+    public Integer getUnidadMedida()
+    {
         return unidadMedida;
     }
 
-    public void setUnidadMedida(int unidadMedida) {
+    public void setUnidadMedida(Integer unidadMedida)
+    {
         this.unidadMedida = unidadMedida;
     }
 
-    public int getAlmacen() {
+    public Integer getAlmacen()
+    {
         return almacen;
     }
 
-    public void setAlmacen(int almacen) {
+    public void setAlmacen(Integer almacen)
+    {
         this.almacen = almacen;
     }
 
-    public String getUbicacion() {
+    public String getUbicacion()
+    {
         return ubicacion;
     }
 
-    public void setUbicacion(String ubicacion) {
+    public void setUbicacion(String ubicacion)
+    {
         this.ubicacion = ubicacion;
     }
 
-    public int getProveedor() {
+    public Integer getProveedor()
+    {
         return proveedor;
     }
 
-    public void setProveedor(int proveedor) {
+    public void setProveedor(Integer proveedor)
+    {
         this.proveedor = proveedor;
     }
 
-    public double getPrecioCompra() {
+    public BigDecimal getPrecioCompra()
+    {
         return precioCompra;
     }
 
-    public void setPrecioCompra(double precioCompra) {
+    public void setPrecioCompra(BigDecimal precioCompra)
+    {
         this.precioCompra = precioCompra;
     }
 
-    public int getStock() {
+    public Integer getStock()
+    {
         return stock;
     }
 
-    public void setStock(int stock) {
+    public void setStock(Integer stock)
+    {
         this.stock = stock;
     }
 
-    public int getCondicion() {
+    public Integer getCondicion()
+    {
         return condicion;
     }
 
-    public void setCondicion(int condicion) {
+    public void setCondicion(Integer condicion)
+    {
         this.condicion = condicion;
     }
 }

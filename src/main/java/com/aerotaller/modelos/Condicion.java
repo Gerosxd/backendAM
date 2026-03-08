@@ -1,31 +1,37 @@
 package com.aerotaller.modelos;
 
-public class Condicion {
+import jakarta.persistence.*;
 
-    private int idCondicion;
+@Entity
+@Table(name = "Condicion")
+public class Condicion
+{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idCondicion")
+    private Integer idCondicion;
+
+    @Column(name = "Nombre", nullable = false, length = 30)
     private String nombre;
 
-    public Condicion() {
-    }
-
-    public Condicion(int idCondicion, String nombre) {
-        this.setIdCondicion(idCondicion);
-        this.setNombre(nombre);
-    }
-
-    public int getIdCondicion() {
+    public Integer getIdCondicion()
+    {
         return idCondicion;
     }
 
-    public void setIdCondicion(int idCondicion) {
+    public void setIdCondicion(Integer idCondicion)
+    {
         this.idCondicion = idCondicion;
     }
 
-    public String getNombre() {
+    public String getNombre()
+    {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(String nombre)
+    {
         this.nombre = nombre;
     }
 }
