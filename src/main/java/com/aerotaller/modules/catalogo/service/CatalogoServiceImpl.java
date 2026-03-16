@@ -7,6 +7,7 @@ import com.aerotaller.modules.catalogo.repository.CondicionRepository;
 import com.aerotaller.modules.catalogo.repository.ProveedorRepository;
 import com.aerotaller.modules.catalogo.repository.UnidadMedidaRepository;
 import org.springframework.stereotype.Service;
+import com.aerotaller.modules.entradaart.repository.EstadoEntradaRepository;
 
 import java.util.List;
 
@@ -19,13 +20,15 @@ public class CatalogoServiceImpl implements CatalogoService
     private final AlmacenRepository almacenRepository;
     private final ProveedorRepository proveedorRepository;
     private final CondicionRepository condicionRepository;
+    private final EstadoEntradaRepository estadoEntradaRepository;
 
     public CatalogoServiceImpl(
             CategoriaRepository categoriaRepository,
             UnidadMedidaRepository unidadMedidaRepository,
             AlmacenRepository almacenRepository,
             ProveedorRepository proveedorRepository,
-            CondicionRepository condicionRepository
+            CondicionRepository condicionRepository,
+            EstadoEntradaRepository estadoEntradaRepository
     )
     {
         this.categoriaRepository = categoriaRepository;
@@ -33,6 +36,7 @@ public class CatalogoServiceImpl implements CatalogoService
         this.almacenRepository = almacenRepository;
         this.proveedorRepository = proveedorRepository;
         this.condicionRepository = condicionRepository;
+        this.estadoEntradaRepository = estadoEntradaRepository;
     }
 
     @Override
@@ -77,6 +81,15 @@ public class CatalogoServiceImpl implements CatalogoService
         return condicionRepository.findAll()
                 .stream()
                 .map(item -> new CatalogoOptionDto(item.getIdCondicion(), item.getNombre()))
+                .toList();
+    }
+
+    @Override
+    public List<CatalogoOptionDto> obtenerEstadosEntrada()
+    {
+        return estadoEntradaRepository.findAll()
+                .stream()
+                .map(item -> new CatalogoOptionDto(item.getIdEstadoEntrada(), item.getNombre()))
                 .toList();
     }
 }

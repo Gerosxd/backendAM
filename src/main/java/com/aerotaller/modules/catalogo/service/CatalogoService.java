@@ -15,4 +15,6 @@ public interface CatalogoService
     List<CatalogoOptionDto> obtenerProveedores();
 
     List<CatalogoOptionDto> obtenerCondiciones();
+
+    List<CatalogoOptionDto> obtenerEstadosEntrada();
 }
