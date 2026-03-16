@@ -48,4 +48,9 @@ public class CatalogoController
     {
         return ResponseEntity.ok(catalogoService.obtenerCondiciones());
     }
+
+    @GetMapping("/estados-entrada")
+    public ResponseEntity<List<CatalogoOptionDto>> obtenerEstadosEntrada() {
+        return ResponseEntity.ok(catalogoService.obtenerEstadosEntrada());
+    }
 }
