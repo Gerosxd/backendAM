@@ -1,5 +1,6 @@
 package com.aerotaller.modelos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -65,6 +66,18 @@ public class Articulo
     public void setCodigo(String codigo)
     {
         this.codigo = codigo;
+    }
+
+    @JsonProperty("noParte")
+    public String getNoParte()
+    {
+        return codigo;
+    }
+
+    @JsonProperty("noParte")
+    public void setNoParte(String noParte)
+    {
+        this.codigo = noParte;
     }
 
     public String getNoSerie()

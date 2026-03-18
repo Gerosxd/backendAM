@@ -1,12 +1,9 @@
-package com.aerotaller.modelos;
+package com.aerotaller.modules.aeronave.dto;
 
-import jakarta.persistence.*;
+import com.aerotaller.modelos.Aeronave;
 
-@Entity
-@Table(name = "Aeronave")
-public class Aeronave {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AeronaveResponse {
+
     private int idAeronave;
     private String matricula;
     private String nsAeronave;
@@ -25,29 +22,31 @@ public class Aeronave {
     private String moAPU;
     private String nsAPU;
 
-    public Aeronave() {
-    }
+    public static AeronaveResponse fromEntity(Aeronave entity) {
+        if (entity == null) {
+            return null;
+        }
 
-    public Aeronave(int idAeronave, String matricula, String nsAeronave, int modeloAeronave, String operador, String maMotorLH, String moMotorLH, String nsMotorLH, String maMotorRH, String moMotorRH, String nsMotorRH, String maMotorC, String moMotorC, String nsMotorC, String maAPU, String moAPU, String nsAPU) {
-        this.setIdAeronave(idAeronave);
-        this.setMatricula(matricula);
-        this.setNsAeronave(nsAeronave);
-        this.setModeloAeronave(modeloAeronave);
-        this.setOperador(operador);
-        this.setMaMotorLH(maMotorLH);
-        this.setMoMotorLH(moMotorLH);
-        this.setNsMotorLH(nsMotorLH);
-        this.setMaMotorRH(maMotorRH);
-        this.setMoMotorRH(moMotorRH);
-        this.setNsMotorRH(nsMotorRH);
-        this.setMaMotorC(maMotorC);
-        this.setMoMotorC(moMotorC);
-        this.setNsMotorC(nsMotorC);
-        this.setMaAPU(maAPU);
-        this.setMoAPU(moAPU);
-        this.setNsAPU(nsAPU);
+        AeronaveResponse dto = new AeronaveResponse();
+        dto.setIdAeronave(entity.getIdAeronave());
+        dto.setMatricula(entity.getMatricula());
+        dto.setNsAeronave(entity.getNsAeronave());
+        dto.setModeloAeronave(entity.getModeloAeronave());
+        dto.setOperador(entity.getOperador());
+        dto.setMaMotorLH(entity.getMaMotorLH());
+        dto.setMoMotorLH(entity.getMoMotorLH());
+        dto.setNsMotorLH(entity.getNsMotorLH());
+        dto.setMaMotorRH(entity.getMaMotorRH());
+        dto.setMoMotorRH(entity.getMoMotorRH());
+        dto.setNsMotorRH(entity.getNsMotorRH());
+        dto.setMaMotorC(entity.getMaMotorC());
+        dto.setMoMotorC(entity.getMoMotorC());
+        dto.setNsMotorC(entity.getNsMotorC());
+        dto.setMaAPU(entity.getMaAPU());
+        dto.setMoAPU(entity.getMoAPU());
+        dto.setNsAPU(entity.getNsAPU());
+        return dto;
     }
-
 
     public int getIdAeronave() {
         return idAeronave;
@@ -185,3 +184,4 @@ public class Aeronave {
         this.nsAPU = nsAPU;
     }
 }
+

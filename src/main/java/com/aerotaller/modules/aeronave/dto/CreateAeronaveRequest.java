@@ -1,61 +1,28 @@
-package com.aerotaller.modelos;
+package com.aerotaller.modules.aeronave.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "Aeronave")
-public class Aeronave {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idAeronave;
+public class CreateAeronaveRequest {
     private String matricula;
     private String nsAeronave;
     private int modeloAeronave;
     private String operador;
+
     private String maMotorLH;
     private String moMotorLH;
     private String nsMotorLH;
+
     private String maMotorRH;
     private String moMotorRH;
     private String nsMotorRH;
+
     private String maMotorC;
     private String moMotorC;
     private String nsMotorC;
+
     private String maAPU;
     private String moAPU;
     private String nsAPU;
 
-    public Aeronave() {
-    }
-
-    public Aeronave(int idAeronave, String matricula, String nsAeronave, int modeloAeronave, String operador, String maMotorLH, String moMotorLH, String nsMotorLH, String maMotorRH, String moMotorRH, String nsMotorRH, String maMotorC, String moMotorC, String nsMotorC, String maAPU, String moAPU, String nsAPU) {
-        this.setIdAeronave(idAeronave);
-        this.setMatricula(matricula);
-        this.setNsAeronave(nsAeronave);
-        this.setModeloAeronave(modeloAeronave);
-        this.setOperador(operador);
-        this.setMaMotorLH(maMotorLH);
-        this.setMoMotorLH(moMotorLH);
-        this.setNsMotorLH(nsMotorLH);
-        this.setMaMotorRH(maMotorRH);
-        this.setMoMotorRH(moMotorRH);
-        this.setNsMotorRH(nsMotorRH);
-        this.setMaMotorC(maMotorC);
-        this.setMoMotorC(moMotorC);
-        this.setNsMotorC(nsMotorC);
-        this.setMaAPU(maAPU);
-        this.setMoAPU(moAPU);
-        this.setNsAPU(nsAPU);
-    }
-
-
-    public int getIdAeronave() {
-        return idAeronave;
-    }
-
-    public void setIdAeronave(int idAeronave) {
-        this.idAeronave = idAeronave;
-    }
+    public CreateAeronaveRequest() {}
 
     public String getMatricula() {
         return matricula;

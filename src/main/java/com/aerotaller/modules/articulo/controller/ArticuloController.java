@@ -1,6 +1,6 @@
 package com.aerotaller.modules.articulo.controller;
 
-import com.aerotaller.modelos.Articulo;
+import com.aerotaller.modules.articulo.dto.ArticuloResponse;
 import com.aerotaller.modules.articulo.dto.CreateArticuloRequest;
 import com.aerotaller.modules.articulo.service.ArticuloService;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +21,32 @@ public class ArticuloController
     }
 
     @GetMapping
-    public ResponseEntity<List<Articulo>> listar()
+    public ResponseEntity<List<ArticuloResponse>> listar()
     {
         return ResponseEntity.ok(articuloService.listarTodos());
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<List<Articulo>> guardarVarios(@RequestBody List<CreateArticuloRequest> requestList)
+    public ResponseEntity<List<ArticuloResponse>> guardarVarios(
+            @RequestBody List<CreateArticuloRequest> requestList)
     {
+        System.out.println("ENTRO AL CONTROLLER");
         return ResponseEntity.ok(articuloService.guardarVarios(requestList));
+    }
+
+    @GetMapping("/codigo/{codigo}")
+    public ResponseEntity<ArticuloResponse> buscarPorCodigo(@PathVariable String codigo) {
+        return ResponseEntity.ok(articuloService.buscarPorCodigo(codigo));
+    }
+
+    @GetMapping("/serie/{noSerie}")
+    public ResponseEntity<ArticuloResponse> buscarPorSerie(@PathVariable String noSerie) {
+        return ResponseEntity.ok(articuloService.buscarPorNoSerie(noSerie));
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ArticuloResponse>> buscar(@RequestParam String termino)
+    {
+        return ResponseEntity.ok(articuloService.buscar(termino));
     }
 }
