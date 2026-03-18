@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Almacen")
-public class Almacen
-{
+public class Almacen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,53 +23,18 @@ public class Almacen
     @Column(name = "Estado", nullable = false)
     private Integer estado;
 
-    public Integer getIdAlmacen()
-    {
-        return idAlmacen;
-    }
+    public Integer getIdAlmacen() { return idAlmacen; }
+    public void setIdAlmacen(Integer idAlmacen) { this.idAlmacen = idAlmacen; }
 
-    public void setIdAlmacen(Integer idAlmacen)
-    {
-        this.idAlmacen = idAlmacen;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre()
-    {
-        return nombre;
-    }
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
 
-    public void setNombre(String nombre)
-    {
-        this.nombre = nombre;
-    }
+    public String getCiudad() { return ciudad; }
+    public void setCiudad(String ciudad) { this.ciudad = ciudad; }
 
-    public String getDireccion()
-    {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion)
-    {
-        this.direccion = direccion;
-    }
-
-    public String getCiudad()
-    {
-        return ciudad;
-    }
-
-    public void setCiudad(String ciudad)
-    {
-        this.ciudad = ciudad;
-    }
-
-    public Integer getEstado()
-    {
-        return estado;
-    }
-
-    public void setEstado(Integer estado)
-    {
-        this.estado = estado;
-    }
+    public Integer getEstado() { return estado; }
+    public void setEstado(Integer estado) { this.estado = estado; }
 }
