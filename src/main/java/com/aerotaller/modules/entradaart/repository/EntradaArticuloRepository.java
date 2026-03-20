@@ -17,7 +17,7 @@ public interface EntradaArticuloRepository extends JpaRepository<EntradaArticulo
             "detalles",
             "detalles.articulo"
     })
-    List<EntradaArticulo> findAll();
+    List<EntradaArticulo> findAllByOrderByFechaEntradaDescIdEntradaDesc();
 
     @EntityGraph(attributePaths = {
             "usuario",

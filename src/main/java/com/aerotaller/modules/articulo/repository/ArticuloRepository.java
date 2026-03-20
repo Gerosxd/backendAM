@@ -10,7 +10,7 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Integer>
 {
     Optional<Articulo> findByCodigo(String codigo);
 
-    boolean existsByCodigo(String codigo);
+    boolean existsByCodigo(String noSerie);
 
     Optional<Articulo> findByNoSerie(String noSerie);
 

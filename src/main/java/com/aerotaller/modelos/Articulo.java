@@ -15,10 +15,10 @@ public class Articulo
     @Column(name = "idArticulo")
     private Integer idArticulo;
 
-    @Column(name = "Codigo", nullable = false, unique = true, length = 50)
+    @Column(name = "Codigo", nullable = false)
     private String codigo;
 
-    @Column(name = "NoSerie", nullable = false, length = 50)
+    @Column(name = "NoSerie", nullable = false, unique = true)
     private String noSerie;
 
     @Column(name = "Descripcion", nullable = false, length = 255)

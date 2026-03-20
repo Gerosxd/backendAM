@@ -19,6 +19,7 @@ import com.aerotaller.modules.entradaart.repository.DetalleEntradaArticuloReposi
 import com.aerotaller.modules.entradaart.repository.EntradaArticuloRepository;
 import com.aerotaller.modules.entradaart.repository.EstadoEntradaRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.aerotaller.modelos.EntradaArticulo;
 import com.aerotaller.modelos.DetalleEntradaArticulo;
@@ -168,10 +169,9 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
     @Override
     public List<EntradaArticuloListadoResponseDto> listarEntradas()
     {
-        return entradaArticuloRepository.findAll()
-                .stream()
-                .map(this::mapToListadoDto)
-                .toList();
+        return entradaArticuloRepository.findAll(
+                Sort.by(Sort.Order.desc("fechaEntrada"), Sort.Order.desc("idEntrada"))
+        ).stream().map(this::mapToListadoDto).toList();
     }
 
     @Override
