@@ -37,6 +37,8 @@ public class SecurityConfig {
                                 "/api/catalogos/**",
                                 "/api/entradas-articulos/**",
                                 "/api/almacenes/**",
+                                "/api/clientes/**",
+                                "/api/modelos/**",
                                 "/api/articulos/**",
                                 "/api/aeronaves/**",
                                 "/api/salidas/**",
