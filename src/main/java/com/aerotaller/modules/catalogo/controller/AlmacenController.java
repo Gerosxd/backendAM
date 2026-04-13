@@ -39,4 +39,14 @@ public class AlmacenController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    // NUEVO MÉTODO PARA ELIMINAR
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarAlmacen(@PathVariable Integer id) {
+        if (almacenRepository.existsById(id)) {
+            almacenRepository.deleteById(id);
+            return ResponseEntity.noContent().build(); // Retorna 204 No Content indicando éxito
+        }
+        return ResponseEntity.notFound().build(); // Retorna 404 si el ID no existe
+    }
 }
