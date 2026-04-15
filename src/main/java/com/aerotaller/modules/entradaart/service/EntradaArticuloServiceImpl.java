@@ -123,6 +123,7 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
             articulo.setUbicacion(detalleDto.getUbicacion());
             articulo.setProveedor(dto.getProveedor());
             articulo.setPrecioCompra(BigDecimal.valueOf(detalleDto.getPrecioCompra()));
+            articulo.setMoneda(detalleDto.getMoneda());
             articulo.setStock(detalleDto.getCantidad());
             articulo.setCondicion(detalleDto.getCondicion());
 

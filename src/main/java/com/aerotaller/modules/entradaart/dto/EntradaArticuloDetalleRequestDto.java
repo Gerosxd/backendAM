@@ -11,6 +11,7 @@ public class EntradaArticuloDetalleRequestDto
     private Integer cantidad;
     private String ubicacion;
     private Integer precioCompra;
+    private String moneda;
     private Integer condicion;
 
     public String getCodigo()
@@ -101,5 +102,15 @@ public class EntradaArticuloDetalleRequestDto
     public void setCondicion(Integer condicion)
     {
         this.condicion = condicion;
+    }
+
+    public String getMoneda()
+    {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda)
+    {
+        this.moneda = moneda;
     }
 }

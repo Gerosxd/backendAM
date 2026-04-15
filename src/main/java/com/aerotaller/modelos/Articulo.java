@@ -42,6 +42,9 @@ public class Articulo
     @Column(name = "PrecioCompra", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioCompra;
 
+    @Column(name = "Moneda") // Asegúrate de que coincida con la mayúscula de la BD
+    private String moneda;
+
     @Column(name = "Stock", nullable = false)
     private Integer stock;
 
@@ -178,5 +181,13 @@ public class Articulo
     public void setCondicion(Integer condicion)
     {
         this.condicion = condicion;
+    }
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
     }
 }

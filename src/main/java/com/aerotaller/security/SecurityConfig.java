@@ -44,7 +44,10 @@ public class SecurityConfig {
                                 "/api/aeronaves/**",
                                 "/api/salidas/**",
                                 "/api/entradas-articulos/**",
-                                "/api/ots/**"
+                                "/api/ots/**",
+                                "/api/programadas/**",
+                                "/api/entradas-articulos/**"
+
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
