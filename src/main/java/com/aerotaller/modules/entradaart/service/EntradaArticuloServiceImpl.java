@@ -99,6 +99,7 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
         entrada.setAlmacenDestino(almacenDestino);
         entrada.setEstadoEntrada(estadoEntrada);
         entrada.setObservaciones(dto.getObservaciones());
+        entrada.setRecibidoPor(dto.getRecibidoPor());
 
         EntradaArticulo entradaGuardada = entradaArticuloRepository.save(entrada);
 
@@ -161,7 +162,7 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
         response.setProveedor(proveedor != null ? proveedor.getNombre() : "-");
         response.setAlmacenDestino(almacenDestino.getNombre());
         response.setEstado(estadoEntrada.getNombre());
-        response.setRecibidoPor(usuario.getNombre());
+        response.setRecibidoPor(entradaGuardada.getRecibidoPor());
         response.setDetalles(detallesResponse);
 
         return response;
@@ -197,7 +198,7 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
         );
         dto.setProveedor(entrada.getProveedor() != null ? entrada.getProveedor().getNombre() : "-");
         dto.setAlmacenDestino(entrada.getAlmacenDestino().getNombre());
-        dto.setRecibidoPor(entrada.getUsuario().getNombre());
+        dto.setRecibidoPor(entrada.getRecibidoPor());
         dto.setEstado(entrada.getEstadoEntrada().getNombre());
         dto.setTotalArticulos(entrada.getDetalles() != null ? entrada.getDetalles().size() : 0);
 
@@ -218,7 +219,7 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
         response.setProveedor(entrada.getProveedor() != null ? entrada.getProveedor().getNombre() : "-");
         response.setAlmacenDestino(entrada.getAlmacenDestino().getNombre());
         response.setEstado(entrada.getEstadoEntrada().getNombre());
-        response.setRecibidoPor(entrada.getUsuario().getNombre());
+        response.setRecibidoPor(entrada.getRecibidoPor());
 
         List<com.aerotaller.modules.entradaart.dto.EntradaArticuloDetalleResponseDto> detalles =
                 entrada.getDetalles().stream().map(detalle ->

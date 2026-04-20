@@ -9,6 +9,7 @@ public class EntradaArticuloRegistroRequestDto {
     private Integer almacenDestino;
     private Integer estadoEntrada;
     private String observaciones;
+    private String recibidoPor;
     private List<EntradaArticuloDetalleRequestDto> detalles;
 
     public Integer getUsuario() {
@@ -58,4 +59,6 @@ public class EntradaArticuloRegistroRequestDto {
     public void setDetalles(List<EntradaArticuloDetalleRequestDto> detalles) {
         this.detalles = detalles;
     }
+
+    public String getRecibidoPor() { return recibidoPor; }
 }

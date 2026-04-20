@@ -74,4 +74,5 @@ public class EntradaArticuloListadoResponseDto {
     public void setTotalArticulos(Integer totalArticulos) {
         this.totalArticulos = totalArticulos;
     }
+
 }

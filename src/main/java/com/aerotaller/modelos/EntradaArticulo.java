@@ -39,6 +39,9 @@ public class EntradaArticulo {
     @Column(name = "Observaciones", length = 255)
     private String observaciones;
 
+    @Column(name = "recibido_por")
+    private String recibidoPor;
+
     @OneToMany(mappedBy = "entrada", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleEntradaArticulo> detalles = new ArrayList<>();
 
@@ -123,4 +126,8 @@ public class EntradaArticulo {
         detalles.remove(detalle);
         detalle.setEntrada(null);
     }
+
+    public String getRecibidoPor() { return recibidoPor; }
+
+    public void setRecibidoPor(String recibidoPor) { this.recibidoPor = recibidoPor; }
 }
