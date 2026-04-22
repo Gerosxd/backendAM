@@ -16,7 +16,6 @@ import java.util.List;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter
 {
-
     private final JwtService jwtService;
 
     public JwtAuthFilter(JwtService jwtService)
@@ -29,11 +28,12 @@ public class JwtAuthFilter extends OncePerRequestFilter
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException
     {
-
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod()))
+        {
             filterChain.doFilter(request, response);
             return;
         }
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer "))
@@ -45,6 +45,14 @@ public class JwtAuthFilter extends OncePerRequestFilter
         try
         {
             String token = authHeader.substring(7);
+
+            if (!jwtService.isTokenValid(token))
+            {
+                SecurityContextHolder.clearContext();
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             String username = jwtService.extractUsername(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)
@@ -58,7 +66,8 @@ public class JwtAuthFilter extends OncePerRequestFilter
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             SecurityContextHolder.clearContext();
         }

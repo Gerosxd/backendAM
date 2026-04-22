@@ -45,6 +45,8 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+
+
         <!-- MySQL Driver -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -90,10 +92,19 @@
             <artifactId>jasperreports</artifactId>
             <version>6.21.0</version>
         </dependency>
+
+        <!--
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-fonts</artifactId>
             <version>6.21.0</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.2</version>
         </dependency>
 
         <!-- Lombok -->
@@ -109,7 +120,18 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+
+
+
     </dependencies>
+
+
 
 
     <build>
