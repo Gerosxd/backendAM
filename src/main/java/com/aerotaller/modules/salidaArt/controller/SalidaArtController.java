@@ -29,8 +29,8 @@ public class SalidaArtController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SalidaArtResponse> obtener(@PathVariable Integer id) {
-        return ResponseEntity.ok(salidaService.obtenerPorId(id));
+    public ResponseEntity<SalidaArtDetalleResponse> obtener(@PathVariable Integer id) {
+        return ResponseEntity.ok(salidaService.obtenerDetalle(id));
     }
 
     @DeleteMapping("/{id}")
@@ -39,8 +39,4 @@ public class SalidaArtController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/detalles")
-    public ResponseEntity<SalidaArtDetalleResponse> obtenerDetalle(@PathVariable Integer id) {
-        return ResponseEntity.ok(salidaService.obtenerDetalle(id));
-    }
 }

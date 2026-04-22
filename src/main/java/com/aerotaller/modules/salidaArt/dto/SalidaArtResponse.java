@@ -14,6 +14,7 @@ public class SalidaArtResponse {
     private String encargadoAlmacen;
     private String traslada;
     private String recibe;
+    private Integer totalArticulos;
 
     public static SalidaArtResponse fromEntity(SalidaArt entity) {
         if (entity == null) {
@@ -94,6 +95,14 @@ public class SalidaArtResponse {
 
     public void setRecibe(String recibe) {
         this.recibe = recibe;
+    }
+
+    public Integer getTotalArticulos() {
+        return totalArticulos;
+    }
+
+    public void setTotalArticulos(Integer totalArticulos) {
+        this.totalArticulos = totalArticulos;
     }
 }
 
