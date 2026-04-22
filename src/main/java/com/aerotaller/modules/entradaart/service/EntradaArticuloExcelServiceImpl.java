@@ -47,7 +47,8 @@ public class EntradaArticuloExcelServiceImpl implements EntradaArticuloExcelServ
                 .orElseThrow(() -> new RuntimeException("Entrada no encontrada."));
 
         try (
-                InputStream templateStream = new ClassPathResource("templates/PlantillaEntrada.xlsx").getInputStream();
+                InputStream templateStream =
+                        new ClassPathResource("templates/entrada_articulo_template.xlsx").getInputStream();
                 XSSFWorkbook workbook = new XSSFWorkbook(templateStream);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
         )
