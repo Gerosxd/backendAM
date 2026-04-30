@@ -67,10 +67,9 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
 
     @Override
     @Transactional
-    public EntradaArticuloRegistroResponseDto registrarEntradaCompleta(EntradaArticuloRegistroRequestDto dto)
-    {
-        if (dto.getDetalles() == null || dto.getDetalles().isEmpty())
-        {
+    public EntradaArticuloRegistroResponseDto registrarEntradaCompleta(EntradaArticuloRegistroRequestDto dto) {
+        // 1. Validaciones iniciales de integridad
+        if (dto.getDetalles() == null || dto.getDetalles().isEmpty()) {
             throw new RuntimeException("Debes registrar al menos un artículo en la entrada.");
         }
 
@@ -78,8 +77,7 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
 
         Proveedor proveedor = null;
-        if (dto.getProveedor() != null)
-        {
+        if (dto.getProveedor() != null) {
             proveedor = proveedorRepository.findById(dto.getProveedor())
                     .orElseThrow(() -> new RuntimeException("Proveedor no encontrado."));
         }
@@ -90,7 +88,7 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
         EstadoEntrada estadoEntrada = estadoEntradaRepository.findById(dto.getEstadoEntrada())
                 .orElseThrow(() -> new RuntimeException("Estado de entrada no encontrado."));
 
-        // 1. Crear encabezado con folio temporal
+        // 2. Crear y persistir el encabezado con folio temporal
         EntradaArticulo entrada = new EntradaArticulo();
         entrada.setFolio("TEMP-" + System.currentTimeMillis());
         entrada.setFechaEntrada(LocalDateTime.now());
@@ -101,19 +99,13 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
         entrada.setObservaciones(dto.getObservaciones());
         entrada.setRecibidoPor(dto.getRecibidoPor());
 
-        EntradaArticulo entradaGuardada = entradaArticuloRepository.save(entrada);
+        final EntradaArticulo entradaGuardada = entradaArticuloRepository.save(entrada);
 
-        // 2. Folio definitivo
-        String folioDefinitivo = String.format("ENT-%03d", entradaGuardada.getIdEntrada());
-        entradaGuardada.setFolio(folioDefinitivo);
-        entradaGuardada = entradaArticuloRepository.save(entradaGuardada);
+        // 3. Preparar colecciones para persistencia en lote (Batch)
+        List<Articulo> articulosParaGuardar = new ArrayList<>();
 
-        List<EntradaArticuloDetalleResponseDto> detallesResponse = new ArrayList<>();
-
-        // 3. Registrar artículos + detalle
-        for (EntradaArticuloDetalleRequestDto detalleDto : dto.getDetalles())
-        {
-
+        // Mapeamos los DTOs a entidades de Articulo primero
+        for (EntradaArticuloDetalleRequestDto detalleDto : dto.getDetalles()) {
             Articulo articulo = new Articulo();
             articulo.setCodigo(detalleDto.getCodigo());
             articulo.setNoSerie(detalleDto.getNoSerie());
@@ -128,44 +120,37 @@ public class EntradaArticuloServiceImpl implements EntradaArticuloService
             articulo.setStock(detalleDto.getCantidad());
             articulo.setCondicion(detalleDto.getCondicion());
 
-            Articulo articuloGuardado = articuloRepository.save(articulo);
+            articulosParaGuardar.add(articulo);
+        }
+
+        // Guardamos todos los artículos de un solo golpe (Eficiencia para 40 registros)
+        List<Articulo> articulosPersistidos = articuloRepository.saveAll(articulosParaGuardar);
+
+        // 4. Crear los detalles vinculando la entrada y los artículos ya persistidos
+        List<DetalleEntradaArticulo> detallesParaGuardar = new ArrayList<>();
+        for (int i = 0; i < articulosPersistidos.size(); i++) {
+            Articulo art = articulosPersistidos.get(i);
+            EntradaArticuloDetalleRequestDto detDto = dto.getDetalles().get(i);
 
             DetalleEntradaArticulo detalle = new DetalleEntradaArticulo();
             detalle.setEntrada(entradaGuardada);
-            detalle.setArticulo(articuloGuardado);
-            detalle.setCantidad(detalleDto.getCantidad());
-            detalle.setUbicacion(detalleDto.getUbicacion());
-            detalle.setPrecioUnitario(BigDecimal.valueOf(detalleDto.getPrecioCompra()));
+            detalle.setArticulo(art);
+            detalle.setCantidad(detDto.getCantidad());
+            detalle.setUbicacion(detDto.getUbicacion());
+            detalle.setPrecioUnitario(BigDecimal.valueOf(detDto.getPrecioCompra()));
 
-            detalleEntradaArticuloRepository.save(detalle);
-
-            EntradaArticuloDetalleResponseDto detalleResp = new EntradaArticuloDetalleResponseDto();
-            detalleResp.setIdArticulo(articuloGuardado.getIdArticulo());
-            detalleResp.setCodigo(articuloGuardado.getCodigo());
-            detalleResp.setDescripcion(articuloGuardado.getDescripcion());
-            detalleResp.setCantidad(detalle.getCantidad());
-            detalleResp.setUbicacion(detalle.getUbicacion());
-            detalleResp.setPrecioUnitario(detalle.getPrecioUnitario().doubleValue());
-
-            detallesResponse.add(detalleResp);
+            detallesParaGuardar.add(detalle);
         }
 
-        // 4. Respuesta final
-        EntradaArticuloRegistroResponseDto response = new EntradaArticuloRegistroResponseDto();
-        response.setIdEntrada(entradaGuardada.getIdEntrada());
-        response.setFolio(entradaGuardada.getFolio());
-        response.setFechaEntrada(
-                entradaGuardada.getFechaEntrada() != null
-                        ? entradaGuardada.getFechaEntrada().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                        : ""
-        );
-        response.setProveedor(proveedor != null ? proveedor.getNombre() : "-");
-        response.setAlmacenDestino(almacenDestino.getNombre());
-        response.setEstado(estadoEntrada.getNombre());
-        response.setRecibidoPor(entradaGuardada.getRecibidoPor());
-        response.setDetalles(detallesResponse);
+        // Guardamos todos los detalles en lote
+        detalleEntradaArticuloRepository.saveAll(detallesParaGuardar);
 
-        return response;
+        // 5. Generar folio definitivo basado en el ID autogenerado
+        String folioDefinitivo = String.format("ENT-%04d", entradaGuardada.getIdEntrada());
+        entradaGuardada.setFolio(folioDefinitivo);
+
+        // El @Transactional hará el commit de todo, incluyendo el nuevo folio, al terminar el método
+        return mapToRegistroResponse(entradaGuardada);
     }
 
     @Override
