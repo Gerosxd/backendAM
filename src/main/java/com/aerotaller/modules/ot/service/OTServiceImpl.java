@@ -6,6 +6,9 @@ import com.aerotaller.modelos.NuevaOT;
 import com.aerotaller.modelos.OTDiscrepancia;
 import com.aerotaller.modelos.OTTareaMantenimiento;
 import com.aerotaller.modules.aeronave.repository.AeronaveRepository;
+import com.aerotaller.modelos.ModeloAeronave;
+// Cambia el import para usar el que está en catálogo
+import com.aerotaller.modules.catalogo.repository.ModeloAeronaveRepository;
 import com.aerotaller.modules.ot.dto.AeronaveComboResponse;
 import com.aerotaller.modules.ot.dto.CrearOTRequest;
 import com.aerotaller.modules.ot.dto.CrearOTResponse;
@@ -17,6 +20,8 @@ import com.aerotaller.modules.ot.repository.NuevaOTRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.aerotaller.modules.ot.dto.OTListadoResponse;
+import com.aerotaller.modules.ot.dto.OTDetalleResponse;
+import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,14 +36,17 @@ public class OTServiceImpl implements OTService
     private final NuevaOTRepository nuevaOTRepository;
     private final AeronaveRepository aeronaveRepository;
     private final ClienteRepository clienteRepository;
+    private final ModeloAeronaveRepository modeloAeronaveRepository;
 
     public OTServiceImpl(NuevaOTRepository nuevaOTRepository,
                          AeronaveRepository aeronaveRepository,
-                         ClienteRepository clienteRepository)
+                         ClienteRepository clienteRepository,
+                         ModeloAeronaveRepository modeloAeronaveRepository)
     {
         this.nuevaOTRepository = nuevaOTRepository;
         this.aeronaveRepository = aeronaveRepository;
         this.clienteRepository = clienteRepository;
+        this.modeloAeronaveRepository = modeloAeronaveRepository;
     }
 
     @Override
@@ -284,4 +292,70 @@ public class OTServiceImpl implements OTService
                 ))
                 .toList();
     }
+
+    @Override
+    @Transactional
+    public OTDetalleResponse obtenerPorId(Integer idOT) {
+        NuevaOT ot = nuevaOTRepository.findById(idOT)
+                .orElseThrow(() -> new RuntimeException("La Orden de Trabajo solicitada no existe."));
+
+        OTDetalleResponse response = new OTDetalleResponse();
+        response.setIdOT(ot.getIdOT());
+        response.setNoOT(ot.getNoOT());
+        response.setFechaCreacion(ot.getFechaCreacion());
+        response.setFechaApertura(ot.getFechaApertura());
+        response.setFechaEntrega(ot.getFechaEntrega());
+        response.setFechaCierre(ot.getFechaCierre());
+        response.setEstado(ot.getEstado());
+        response.setHorasTotales(ot.getHorasTotales());
+        response.setCiclosTotales(ot.getCiclosTotales());
+        response.setComentarioCliente(ot.getComentarioCliente());
+
+        // --- MAPEO DE LA AERONAVE Y BÚSQUEDA DEL MODELO ---
+        if (ot.getMatricula() != null) {
+            Aeronave aeronave = ot.getMatricula();
+            response.setMatricula(aeronave.getMatricula());
+
+            int idModelo = aeronave.getModeloAeronave();
+            // Buscamos en la tabla ModeloAeronave usando el ID numérico
+            modeloAeronaveRepository.findById(idModelo)
+                    .ifPresentOrElse(
+                            modeloEntity -> response.setModeloAeronave(modeloEntity.getMarca() + " " + modeloEntity.getModelo()),
+                            () -> response.setModeloAeronave("ID Modelo: " + idModelo)
+                    );
+        }
+
+        if (ot.getCliente() != null) {
+            response.setClienteCompania(ot.getCliente().getCompania());
+            response.setClienteContacto(ot.getCliente().getContacto());
+        } else {
+            response.setClienteCompania("Sin cliente");
+        }
+
+        // Mapeo de la lista de tareas
+        List<OTTareaRequest> tareas = ot.getTareasMantenimiento().stream().map(t -> {
+            OTTareaRequest dto = new OTTareaRequest();
+            dto.setCodigo(t.getCodigo());
+            dto.setDescripcion(t.getDescripcion());
+            dto.setTecnicos(t.getTecnicos());
+            dto.setHorasTotales(t.getHorasTotales());
+            dto.setTipoTarea(t.getTipoTarea());
+            return dto;
+        }).toList();
+        response.setTareasMantenimiento(tareas);
+
+        // Mapeo de la lista de discrepancias
+        List<OTDiscrepanciaRequest> disc = ot.getDiscrepancias().stream().map(d -> {
+            OTDiscrepanciaRequest dto = new OTDiscrepanciaRequest();
+            dto.setCodigo(d.getCodigo());
+            dto.setDescripcion(d.getDescripcion());
+            dto.setEstatus(d.getEstatus());
+            dto.setAcciones(d.getAcciones());
+            return dto;
+        }).toList();
+        response.setDiscrepancias(disc);
+
+        return response;
+    }
+
 }

@@ -58,4 +58,17 @@ public class OTController
     {
         return ResponseEntity.ok(otService.listarOTs());
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(otService.obtenerPorId(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al recuperar los detalles de la OT.");
+        }
+    }
 }
