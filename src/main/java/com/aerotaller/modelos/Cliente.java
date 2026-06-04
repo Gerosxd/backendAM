@@ -16,13 +16,13 @@ public class Cliente {
     @Column(name = "idCliente")
     private Integer idCliente;
 
-    @Column(name = "Compania", nullable = false, length = 50)
+    @Column(name = "Compania", nullable = false, length = 100)
     private String compania;
 
     @Column(name = "RFC", nullable = false, length = 15)
     private String rfc;
 
-    @Column(name = "Contacto", nullable = false, length = 30)
+    @Column(name = "Contacto", nullable = false, length = 150)
     private String contacto;
 
     @Column(name = "Telefono", nullable = false, length = 15)
