@@ -4,6 +4,7 @@ import com.aerotaller.modelos.ReporteProgramado;
 import com.aerotaller.modules.tareaProgramada.dto.TareaProgramadaDTO;
 import com.aerotaller.modules.tareaProgramada.repository.TareaProgramadaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // Importar de Spring
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,6 @@ public class TareaProgramadaServiceImpl implements TareaProgramadaService {
 
     private final TareaProgramadaRepository repository;
 
-    // Inyección explícita por constructor, ideal para arquitecturas limpias
     public TareaProgramadaServiceImpl(TareaProgramadaRepository repository) {
         this.repository = repository;
     }
@@ -23,27 +23,23 @@ public class TareaProgramadaServiceImpl implements TareaProgramadaService {
     }
 
     @Override
+    @Transactional // SOLUCIÓN: Asegura la integridad transaccional en producción
     public ReporteProgramado guardar(TareaProgramadaDTO dto) {
-        // 1. Buscamos si ya existe el código en la base de datos
         Optional<ReporteProgramado> existente = repository.findByCodigo(dto.getCodigo());
-
         ReporteProgramado tarea;
 
         if (existente.isPresent()) {
-            // Si ya existe, extraemos el objeto persistido (conserva su idReporte de la DB)
             tarea = existente.get();
         } else {
-            // Si es un registro nuevo, creamos la instancia y asignamos la clave primaria única
             tarea = new ReporteProgramado();
             tarea.setCodigo(dto.getCodigo());
         }
 
-        // 2. Mapeamos los datos modificados o nuevos que provienen de la vista de Vue
+        // Mapeo explícito
         tarea.setDescripcion(dto.getDescripcion());
-        tarea.setModelo(dto.getModeloId());
+        tarea.setModelo(dto.getModeloId()); // Asegurado gracias a la corrección del DTO
         tarea.setTecnico(dto.getTecnico());
         tarea.setHorasTotales(dto.getHorasTotales());
-
 
         return repository.save(tarea);
     }

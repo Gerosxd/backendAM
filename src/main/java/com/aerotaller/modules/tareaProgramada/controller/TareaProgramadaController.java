@@ -27,6 +27,6 @@ public class TareaProgramadaController {
     @PostMapping
     public ResponseEntity<ReporteProgramado> registrar(@RequestBody TareaProgramadaDTO dto) {
         ReporteProgramado resultado = service.guardar(dto);
-        return ResponseEntity.ok(resultado);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(resultado);
     }
 }

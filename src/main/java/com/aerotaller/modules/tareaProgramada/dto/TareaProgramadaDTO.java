@@ -8,7 +8,7 @@ import lombok.Setter;
 public class TareaProgramadaDTO {
     private String codigo;
     private String descripcion;
-    private int modeloId;
+    private Integer modeloId;
     private String tecnico;
     private double horasTotales;
 }
