@@ -28,12 +28,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                // Customizer.withDefaults() buscará automáticamente el bean 'corsConfigurationSource' de abajo
+                // 1. Al activar esto al inicio, Spring intercepta y aprueba el Preflight automáticamente usando tu Bean de abajo
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        // SOLUCIÓN: Se removió la línea de CorsUtils que causaba el fallo de resolución.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/api/auth/**",
@@ -59,12 +60,10 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Dejamos este Bean aquí porque está perfectamente estructurado para Azure y Localhost
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Orígenes explícitos para producción y desarrollo
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://mango-grass-0de474f1e.6.azurestaticapps.net",
                 "http://localhost:5173"
