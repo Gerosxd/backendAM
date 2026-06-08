@@ -69,7 +69,10 @@ public class JwtAuthFilter extends OncePerRequestFilter
         }
         catch (Exception e)
         {
+            logger.error("Fallo en la validacion del token JWT: " + e.getMessage());
             SecurityContextHolder.clearContext();
+            filterChain.doFilter(request, response);
+            return;
         }
 
         filterChain.doFilter(request, response);
