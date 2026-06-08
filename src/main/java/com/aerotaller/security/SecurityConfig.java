@@ -14,7 +14,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -29,7 +28,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults()) // Busca el bean corsConfigurationSource de abajo
+                // Customizer.withDefaults() buscará automáticamente el bean 'corsConfigurationSource' de abajo
+                .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -59,12 +59,12 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // SOLUCIÓN: Definir explícitamente cómo Spring Security manejará las solicitudes cruzadas (CORS)
+    // Dejamos este Bean aquí porque está perfectamente estructurado para Azure y Localhost
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Orígenes permitidos (Tu app de producción en Azure y entorno local de desarrollo)
+        // Orígenes explícitos para producción y desarrollo
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://mango-grass-0de474f1e.6.azurestaticapps.net",
                 "http://localhost:5173"
@@ -75,7 +75,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Aplica a todas las rutas de la API
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
