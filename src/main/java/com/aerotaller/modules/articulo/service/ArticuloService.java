@@ -23,9 +23,9 @@ public class ArticuloService {
         List<Articulo> articulos = new ArrayList<>();
 
         for (CreateArticuloRequest req : requestList) {
-            if (articuloRepository.existsByCodigo(req.getCodigo())) {
-                throw new RuntimeException("Ya existe un artÃ­culo con cÃ³digo: " + req.getCodigo());
-            }
+           // if (articuloRepository.existsByCodigo(req.getCodigo())) {
+             //   throw new RuntimeException("Ya existe un artÃ­culo con cÃ³digo: " + req.getCodigo());
+            //SIRVE PARA NO DUPLICAR NOSERIE}
 
             Articulo articulo = new Articulo();
             articulo.setCodigo(req.getCodigo());
