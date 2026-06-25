@@ -71,4 +71,23 @@ public class OTController
                     .body("Error interno al recuperar los detalles de la OT.");
         }
     }
+
+    // ==========================================
+    // NUEVA IMPLEMENTACIÓN: ACTUALIZAR OT (Punto 2 y CORS resuelto)
+    // ==========================================
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarOT(@PathVariable Integer id, @RequestBody CrearOTRequest request) {
+        try {
+            // SOLUCIÓN: Al cambiar la firma a 'CrearOTRequest', ahora coincide perfectamente
+            // con lo que espera el metodo 'otService.actualizarOT(Integer, CrearOTRequest)'
+            otService.actualizarOT(id, request);
+            return ResponseEntity.ok().body("Orden de Trabajo actualizada con éxito.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al intentar guardar los cambios de la OT.");
+        }
+    }
 }

@@ -32,6 +32,8 @@ public class CrearOTRequest
 
     private String comentarioCliente;
 
+    private String estado;
+
     private List<OTTareaRequest> tareasMantenimiento;
     private List<OTDiscrepanciaRequest> discrepancias;
 
@@ -217,5 +219,13 @@ public class CrearOTRequest
     public void setDiscrepancias(List<OTDiscrepanciaRequest> discrepancias)
     {
         this.discrepancias = discrepancias;
+    }
+
+    public String getEstado() {
+        return this.estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

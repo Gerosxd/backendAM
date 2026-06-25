@@ -13,6 +13,7 @@ import com.aerotaller.modules.ot.repository.NuevaOTRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
@@ -292,4 +293,68 @@ public class OTServiceImpl implements OTService {
 
         return response;
     }
+
+    @Override
+    @Transactional // Mantiene la consistencia en tu base de datos de MySQL
+    public void actualizarOT(Integer id, CrearOTRequest request) {
+
+        // Buscamos la Orden de Trabajo usando tu repositorio real
+        NuevaOT ot = nuevaOTRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("La Orden de Trabajo con ID " + id + " no existe."));
+
+        // Como CrearOTRequest no tiene 'getEstado', dejamos el que ya tiene la BD
+        ot.setEstado(ot.getEstado());
+
+        // SOLUCIÓN: Si request.getHorasTotales() ya es un BigDecimal o un Double,
+        // lo manejamos de forma segura para evitar el error de 'Cannot resolve method valueOf'
+        if (request.getHorasTotales() != null) {
+            // Si en tu DTO es de tipo Double, usa: BigDecimal.valueOf(request.getHorasTotales())
+            // Si en tu DTO ya es de tipo BigDecimal, se asigna directo: ot.setHorasTotales(request.getHorasTotales())
+            // Para asegurar que compile sin importar el DTO, usamos el constructor New:
+            ot.setHorasTotales(new BigDecimal(request.getHorasTotales().toString()));
+        } else {
+            ot.setHorasTotales(null);
+        }
+
+        ot.setCiclosTotales(request.getCiclosTotales());
+        ot.setFechaEntrega(request.getFechaEntrega());
+        ot.setFechaCierre(request.getFechaCierre());
+        ot.setComentarioCliente(request.getComentarioCliente());
+
+        // Sincronizar Colección de Tareas de Mantenimiento (Clear & Refill)
+        ot.getTareasMantenimiento().clear();
+        if (request.getTareasMantenimiento() != null) {
+            request.getTareasMantenimiento().forEach(tDto -> {
+                OTTareaMantenimiento tarea = new OTTareaMantenimiento();
+                tarea.setCodigo(tDto.getCodigo());
+                tarea.setDescripcion(tDto.getDescripcion());
+                tarea.setTecnicos(tDto.getTecnicos());
+
+                // SOLUCIÓN: Conversión segura para las tareas hijas
+                if (tDto.getHorasTotales() != null) {
+                    tarea.setHorasTotales(new BigDecimal(tDto.getHorasTotales().toString()));
+                }
+
+                tarea.setTipoTarea(tDto.getTipoTarea());
+                ot.agregarTarea(tarea); // Helper bidireccional de tu entidad
+            });
+        }
+
+        // Sincronizar Colección de Discrepancias
+        ot.getDiscrepancias().clear();
+        if (request.getDiscrepancias() != null) {
+            request.getDiscrepancias().forEach(dDto -> {
+                OTDiscrepancia discrepancia = new OTDiscrepancia();
+                discrepancia.setCodigo(dDto.getCodigo());
+                discrepancia.setDescripcion(dDto.getDescripcion());
+                discrepancia.setEstatus(dDto.getEstatus());
+                discrepancia.setAcciones(dDto.getAcciones());
+                ot.agregarDiscrepancia(discrepancia); // Helper bidireccional de tu entidad
+            });
+        }
+
+        // Guardamostodo el árbol relacional en MySQL
+        nuevaOTRepository.save(ot);
+    }
+
 }
